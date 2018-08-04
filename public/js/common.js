@@ -1,4 +1,20 @@
 
+// Convenience object to ease global animation queueing
+$.globalQueue = {
+	queue: function(anim) {
+		$("html")
+		.queue(function(dequeue) {
+			anim()
+			.queue(function(innerDequeue) {
+				dequeue();
+				innerDequeue();
+			});
+		});
+		return this;
+	}
+};
+
+/**** timer setting ****/
 var timer = null;
 var interval = 5000;
 
@@ -24,6 +40,8 @@ function cbTimer()
 	}
 }
 
+/**** character operations ****/
+
 function openCharacter(icon)
 {
 	$(icon).parent("li").addClass("animating");
@@ -42,22 +60,29 @@ function openCharacter(icon)
 	$content.css({opacity:0, display:"block"});
 	$(".text", $content).css({opacity:0});
 	$(".lang *", $content).css({top:0});
-	$content.fadeTo(300, 1, function(){
+	
+	// open animation
+	$.globalQueue
+	.queue(function(){
+		return $content.fadeTo(300, 1);
+	})
+	.queue(function(){
 		var duration = ( pos.left || pos.top ? 800 : 0 );
-		$(".animating .iconbox").animate(
+		return $(".animating .iconbox").animate(
 			{left:0, top:0},
-			{
-				duration: duration,
-				complete: function(){
-					$(".animating .text").fadeTo(500, 1, function(){
-						$(this).parents(".animating").removeClass("animating").addClass("active")
-					});
-					startTimer();
-				}
-			}
+			{duration: duration}
 		);
+	})
+	.queue(function(){
+		$(".animating .text").fadeTo(500, 1);
+		return $(this);
+	})
+	.queue(function(){
+		$(".animating").removeClass("animating").addClass("active");
+		startTimer();
+		return $(".active");
 	});
-}
+} // function openCharacter()
 
 function closeCharacter(icon)
 {
@@ -69,24 +94,33 @@ function closeCharacter(icon)
 	var left = $parent.position().left;
 	var top = $parent.position().top;
 	
-	var duration = ( left || top ? 800 : 0 );
-	$(".active .text").fadeTo(400, 0, function(){
-		$iconbox.animate(
+	// close animation
+	$.globalQueue
+	.queue(function(){
+		return $(".active .text").fadeTo(400, 0);
+	})
+	.queue(function(){
+		var duration = ( left || top ? 800 : 0 );
+		return $iconbox.animate(
 			{left:left, top:top},
-			{
-				duration: duration,
-				complete: function(){
-					$(this).parent().fadeTo(400, 0, function(){
-						$(this).hide();
-						$(".iconbox", this).remove();
-						$(this).parents(".active").removeClass("active");
-						stopTimer();
-					});
-				}
-			}
+			{duration: duration}
 		);
+	})
+	.queue(function(){
+		return $iconbox.fadeTo(500, 0);
+	})
+	.queue(function(){
+		$iconbox.hide().remove();
+		return $(".active .content").fadeTo(300, 0);
+	})
+	.queue(function(){
+		$(".active .content").hide();
+		$(".active").removeClass("active");
+		stopTimer();
+		return $iconbox;
 	});
-}
+} // closeCharacter()
+
 
 $(function(){
 	$("#popup-background").on("click", function(){
@@ -94,11 +128,11 @@ $(function(){
 	});
 	
 	// icon hover effect
-	$(".icon").hover({
+	$(".icon").on({
 		// hover
-		'mouseenter' : function(){
+		"mouseenter": function(){
 			$(this).fadeTo(100, 1, function(){
-				$(".icon-wrapper > ol > li").removeClass("hover")
+				$(".icon-wrapper > ol > li").removeClass("hover");
 				$(this).parent("li").addClass("hover");
 			});
 		},
