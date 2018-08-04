@@ -1,4 +1,4 @@
-
+// test from server
 // Convenience object to ease global animation queueing
 $.globalQueue = {
 	queue: function(anim) {
