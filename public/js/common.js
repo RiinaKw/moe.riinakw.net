@@ -92,15 +92,18 @@ $(function(){
 	$("#popup-background").on("click", function(){
 		closeCharacter( $(".active .iconbox img") );
 	});
-
-	$(".icon").hover(
-		function(){
+	
+	// icon hover effect
+	$(".icon").hover({
+		// hover
+		'mouseenter' : function(){
 			$(this).fadeTo(100, 1, function(){
 				$(".icon-wrapper > ol > li").removeClass("hover")
 				$(this).parent("li").addClass("hover");
 			});
 		},
-		function(){
+		//blur
+		"mouseleave": function(){
 			$(this).parent("li").removeClass("hover");
 			$(this).fadeTo(100, 0.5, function(){
 			});
