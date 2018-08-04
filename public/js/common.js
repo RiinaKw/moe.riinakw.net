@@ -34,7 +34,7 @@ function openCharacter(icon)
 		$iconbox = $('<div class="iconbox" />').prependTo($content);
 	}
 	$iconbox.empty()
-		.css({position:"absolute", left:pos.left, top:pos.top, width:"33.333vmin", height:"33.333vmin"})
+		.css({position:"absolute", left:pos.left, top:pos.top, width:"33.333%", height:"33.333%"})
 		.prepend( $(icon).clone() );
 	$(".iconbox img").css({opacity:1}).on("click", function(){
 		closeCharacter(this);
@@ -108,7 +108,7 @@ $(function(){
 			$(this).fadeTo(100, 0.5, function(){
 			});
 		}
-	).on("click", function(){
+	}).on("click", function(){
 		openCharacter(this);
 	});
 });
