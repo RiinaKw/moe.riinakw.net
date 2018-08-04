@@ -1,0 +1,130 @@
+@charset "utf-8";
+
+html, body {
+	background-color: #666666;
+	font-family: "メイリオ", sans-serif;
+	font-size: 2.5vmin;
+}
+footer {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin:0;
+	padding: 0;
+	width: 99%;
+	height: 10vmin;
+	
+	text-align: center;
+	color: #ffffff;
+}
+
+/* clearfix */
+.cf:before,
+.cf:after {
+	content: " ";
+	display: table;
+}
+.cf:after {
+	clear: both;
+}
+.cf {
+	*zoom: 1;
+}
+
+.icon-wrapper {
+	overflow: hidden;
+	position: absolute;
+	width: 90vmin;
+	height: 90vmin;
+	margin: 0 auto;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+}
+
+.icon-wrapper > ol {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	width: 90vmin;
+	height: 90vmin;
+}
+
+.icon-wrapper > ol > li {
+	display: block;
+	float: left;
+	width: 30vmin;
+	height: 30vmin;
+}
+
+.icon {
+	width: 30vmin;
+	height: 30vmin;
+	opacity: 0.5;
+	cursor: pointer;
+}
+
+.content {
+	display: none;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 90vmin;
+	height: 90vmin;
+	background-color: rgba(32, 32, 32, 0.8);
+	opacity: 0;
+	z-index: 100;
+	color: #ffffff;
+}
+
+.content dl {
+	margin: 2vmin 0 2vmin 30vmin;
+	width: 60vmin;
+	height: 26vmin;
+	line-height: 4vmin;
+}
+
+.content dt,
+.content dd {
+	overflow: hidden;
+	height: 3.5vmin;
+}
+
+.content dt {
+	width: 20vmin;
+	padding: 0 1vmin;
+}
+
+.content dd {
+	margin-bottom: 1vmin;
+}
+.content dd div {
+	padding-left: 11vmin;
+}
+
+.content dt + dd {
+	margin-top: -3.5vmin;
+}
+
+.lang {
+	position: relative;
+}
+
+.lang * {
+	position: relative;
+}
+
+.content p {
+	margin: 3vmin 2vmin;
+	font-size: 3.5vmin;
+}
+
+#popup-background {
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+}
