@@ -60,7 +60,7 @@ function openCharacter(icon)
 	$content.css({opacity:0, display:"block"});
 	$(".text", $content).css({opacity:0});
 	$(".lang *", $content).css({top:0});
-	
+
 	// open animation
 	$.globalQueue
 	.queue(function(){
@@ -93,7 +93,7 @@ function closeCharacter(icon)
 	var $parent = $(icon).parents(".active");
 	var left = $parent.position().left;
 	var top = $parent.position().top;
-	
+
 	// close animation
 	$.globalQueue
 	.queue(function(){
@@ -123,10 +123,10 @@ function closeCharacter(icon)
 
 
 $(function(){
-	$("#popup-background").on("click", function(){
+	$("#js-background").on("click", function(){
 		closeCharacter( $(".active .iconbox img") );
 	});
-	
+
 	// icon hover effect
 	$(".icon").on({
 		// hover
