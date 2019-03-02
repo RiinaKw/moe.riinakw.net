@@ -5,7 +5,7 @@ $text-color: #ffffff;
 $icon-size: 100% / 3;
 $default-text-size: 2.5vmin;
 $status-text-size: 2.5vmin;
-$content-text-side: 3.5vmin;
+$content-text-size: 3.5vmin;
 $popup-background-color-fallback: rgb(48, 48, 48);
 $popup-background-color: rgba(32, 32, 32, 0.8);
 
@@ -141,7 +141,7 @@ footer {
 
 .content p {
 	margin: 3vmin 2vmin;
-	font-size: $content-text-side;
+	font-size: $content-text-size;
 }
 
 .background {
