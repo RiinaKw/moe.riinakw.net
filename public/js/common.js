@@ -44,30 +44,66 @@ function cbTimer()
 
 function openCharacter(icon)
 {
-	$(icon).parent("li").addClass("animating");
-	var pos = $(icon).position();
-	var $content = $(icon).siblings(".content");
+	var $icon = $(icon);
+	$icon.parent("li").addClass("animating");
+	var pos = $icon.position();
+	var left = Math.floor(pos.left);
+	var top = Math.floor(pos.top);
+	var $content = $icon.siblings(".content");
 	var $iconbox = $("iconbox", $content);
 	if ( $iconbox.length == 0 ) {
 		$iconbox = $('<div class="iconbox" />').prependTo($content);
 	}
+	var iconWidth = $icon.width();
+	var iconHeight = $icon.height();
 	$iconbox.empty()
-		.css({position:"absolute", left:pos.left, top:pos.top, width:"33.333%", height:"33.333%"})
-		.prepend( $(icon).clone() );
-	$(".iconbox img").css({opacity:1}).on("click", function(){
+		.css({
+			position: "absolute",
+			left :left,
+			top: top,
+			width: iconWidth,
+			height: iconHeight
+		})
+		.prepend( $icon.clone() );
+	$(".iconbox img").css({
+		opacity: 1
+	}).on("click", function(){
 		closeCharacter(this);
 	});
-	$content.css({opacity:0, display:"block"});
-	$(".text", $content).css({opacity:0});
-	$(".lang *", $content).css({top:0});
+	$content.css({
+		opacity: 0,
+		display: "block"
+	});
+	$(".text", $content).css({
+		opacity: 0
+	});
+	$(".lang *", $content).css({
+		top: 0
+	});
+
+	// icon overlay
+	var $overlay = $("<div />")
+		.addClass("overlay")
+		.appendTo( $(".animating") )
+		.append( $icon.clone() );
+	$(".overlay img").css({
+		position: "absolute",
+		left :left,
+		top: top,
+		width: iconWidth,
+		height: iconHeight
+	});
+	$overlay.show();
 
 	// open animation
 	$.globalQueue
 	.queue(function(){
-		return $content.fadeTo(300, 1);
+		return $content.fadeTo(300, 1, function(){
+			$(".animating .overlay").remove();
+		});
 	})
 	.queue(function(){
-		var duration = ( pos.left || pos.top ? 800 : 0 );
+		var duration = ( left || top ? 800 : 0 );
 		return $(".animating .iconbox").animate(
 			{left:0, top:0},
 			{duration: duration}
@@ -86,13 +122,14 @@ function openCharacter(icon)
 
 function closeCharacter(icon)
 {
-	if ( $(icon).parents(".active").length == 0 ) {
+	var $icon = $(icon);
+	if ($icon.parents(".active").length == 0) {
 		return;
 	}
-	var $iconbox = $(icon).parent();
-	var $parent = $(icon).parents(".active");
-	var left = $parent.position().left;
-	var top = $parent.position().top;
+	var $iconbox = $icon.parent();
+	var $parent = $icon.parents(".active");
+	var left = Math.floor($parent.position().left);
+	var top = Math.floor($parent.position().top);
 
 	// close animation
 	$.globalQueue
@@ -110,8 +147,10 @@ function closeCharacter(icon)
 		return $iconbox.fadeTo(500, 0);
 	})
 	.queue(function(){
-		$iconbox.hide().remove();
 		return $(".active .content").fadeTo(300, 0);
+	})
+	.queue(function(){
+		return $iconbox.hide().remove();
 	})
 	.queue(function(){
 		$(".active .content").hide();
@@ -131,6 +170,8 @@ $(function(){
 	$(".icon").on({
 		// hover
 		"mouseenter": function(){
+			var defaultOpacity = $(this).css("opacity");
+			$(this).data("default-opacity", defaultOpacity);
 			$(this).fadeTo(100, 1, function(){
 				$(".icon-wrapper > ol > li").removeClass("hover");
 				$(this).parent("li").addClass("hover");
@@ -138,8 +179,9 @@ $(function(){
 		},
 		//blur
 		"mouseleave": function(){
+			var defaultOpacity = $(this).data("default-opacity");
 			$(this).parent("li").removeClass("hover");
-			$(this).fadeTo(100, 0.5, function(){
+			$(this).fadeTo(100, defaultOpacity, function(){
 			});
 		}
 	}).on("click", function(){

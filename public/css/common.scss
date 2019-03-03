@@ -4,10 +4,11 @@ $background-color: #666666;
 $text-color: #ffffff;
 $icon-size: 100% / 3;
 $default-text-size: 2.5vmin;
-$status-text-size: 2.5vmin;
 $content-text-size: 3.5vmin;
-$popup-background-color-fallback: rgb(48, 48, 48);
+$footer-text-size: 2vmin;
 $popup-background-color: rgba(32, 32, 32, 0.8);
+$popup-background-color-fallback: rgb(48, 48, 48);
+$icon-initial-transparent: 0.5;
 
 /* global */
 html, body {
@@ -19,6 +20,7 @@ html, body {
 	overflow: hidden;
 }
 
+/* footer: bottom center */
 footer {
 	position: absolute;
 	bottom: 0;
@@ -28,64 +30,66 @@ footer {
 	padding: 0;
 	width: 85vmin;
 	height: 10vmin;
-
-	font-size: 8px;
+	font-size: $footer-text-size;
 }
 
 @media screen and (orientation: landscape) {
+	/* footer: bottom right */
 	footer {
-		top: 0;
-		bottom: auto;
+		bottom: 0;
 		left: auto;
 		right: 0;
 		width: 40vmin;
+		height: 20vmin;
 	}
-}
-
-/* clearfix */
-.clearfix:after {
-    content:" ";
-    display:block;
-    clear:both;
 }
 
 /* icon*/
 .icon-wrapper {
 	overflow: hidden;
 	position: absolute;
-	width: 85vmin;
-	height: 85vmin;
 	margin: auto;
 	left: 0;
 	right: 0;
 	top: 0;
 	bottom: 0;
+	width: 85vmin;
+	height: 85vmin;
+}
 
-	> ol {
-		list-style-type: none;
-		margin: 0;
-		padding: 0;
-		width: $icon-size * 3;
-		height: $icon-size * 3;
+ol {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	width: $icon-size * 3;
+	height: $icon-size * 3;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+}
 
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		align-items: center;
-	}
-
-	> ol > li {
-		display: block;
-		width: $icon-size;
-		height: $icon-size;
-	}
+li {
+	display: block;
+	width: $icon-size;
+	height: $icon-size;
 }
 
 .icon {
 	width: 100%;
 	height: 100%;
-	opacity: 0.5;
+	opacity: $icon-initial-transparent;
 	cursor: pointer;
+}
+
+.overlay {
+	display: none;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: $icon-size * 3;
+	height: $icon-size * 3;
+	z-index: 1000;
 }
 
 /* content */
@@ -107,7 +111,6 @@ footer {
 		width: $icon-size * 2;
 		height: 26vmin;
 		line-height: 4vmin;
-		font-size: $status-text-size;
 	}
 
 	dt,
