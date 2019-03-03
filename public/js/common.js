@@ -177,6 +177,7 @@ $(function(){
 	$(".icon").on({
 		// hover
 		"mouseenter": function(){
+			$(this).stop();
 			var defaultOpacity = $(this).css("opacity");
 			$(this).data("default-opacity", defaultOpacity);
 			$(this).fadeTo(100, 1, function(){
@@ -186,6 +187,7 @@ $(function(){
 		},
 		//blur
 		"mouseleave": function(){
+			$(this).stop();
 			var defaultOpacity = $(this).data("default-opacity");
 			$(this).parent("li").removeClass("hover");
 			$(this).fadeTo(100, defaultOpacity, function(){
