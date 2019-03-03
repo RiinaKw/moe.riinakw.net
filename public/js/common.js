@@ -178,8 +178,6 @@ $(function(){
 		// hover
 		"mouseenter": function(){
 			$(this).stop();
-			var defaultOpacity = $(this).css("opacity");
-			$(this).data("default-opacity", defaultOpacity);
 			$(this).fadeTo(100, 1, function(){
 				$(".icon-wrapper > ol > li").removeClass("hover");
 				$(this).parent("li").addClass("hover");
@@ -188,7 +186,7 @@ $(function(){
 		//blur
 		"mouseleave": function(){
 			$(this).stop();
-			var defaultOpacity = $(this).data("default-opacity");
+			var defaultOpacity = $(".meta .icon").css("opacity");
 			$(this).parent("li").removeClass("hover");
 			$(this).fadeTo(100, defaultOpacity, function(){
 			});

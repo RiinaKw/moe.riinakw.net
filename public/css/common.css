@@ -11,6 +11,10 @@ html, body {
   padding: 0;
 }
 
+.meta {
+  display: none;
+}
+
 /* footer: bottom center */
 footer {
   position: absolute;
