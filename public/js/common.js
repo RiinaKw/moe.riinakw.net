@@ -1,4 +1,3 @@
-// test from server
 // Convenience object to ease global animation queueing
 $.globalQueue = {
 	queue: function(anim) {
@@ -47,8 +46,6 @@ function openCharacter(icon)
 	var $icon = $(icon);
 	$icon.parent("li").addClass("animating");
 	var pos = $icon.position();
-	var left = Math.floor(pos.left);
-	var top = Math.floor(pos.top);
 	var $content = $icon.siblings(".content");
 	var $iconbox = $("iconbox", $content);
 	if ( $iconbox.length == 0 ) {
@@ -59,8 +56,8 @@ function openCharacter(icon)
 	$iconbox.empty()
 		.css({
 			position: "absolute",
-			left :left,
-			top: top,
+			left :pos.left,
+			top: pos.top,
 			width: iconWidth,
 			height: iconHeight
 		})
@@ -88,8 +85,8 @@ function openCharacter(icon)
 		.append( $icon.clone() );
 	$(".overlay img").css({
 		position: "absolute",
-		left :left,
-		top: top,
+		left: pos.left,
+		top: pos.top,
 		width: iconWidth,
 		height: iconHeight
 	});
@@ -103,10 +100,15 @@ function openCharacter(icon)
 		});
 	})
 	.queue(function(){
-		var duration = ( left || top ? 800 : 0 );
+		var duration = ( Math.floor(pos.left) || Math.floor(pos.top) ? 800 : 0 );
 		return $(".animating .iconbox").animate(
-			{left:0, top:0},
-			{duration: duration}
+			{
+				left: 0,
+				top: 0
+			},
+			{
+				duration: duration
+			}
 		);
 	})
 	.queue(function(){
@@ -128,8 +130,8 @@ function closeCharacter(icon)
 	}
 	var $iconbox = $icon.parent();
 	var $parent = $icon.parents(".active");
-	var left = Math.floor($parent.position().left);
-	var top = Math.floor($parent.position().top);
+	var left = $parent.position().left;
+	var top = $parent.position().top;
 
 	// close animation
 	$.globalQueue
@@ -137,10 +139,15 @@ function closeCharacter(icon)
 		return $(".active .text").fadeTo(400, 0);
 	})
 	.queue(function(){
-		var duration = ( left || top ? 800 : 0 );
+		var duration = ( Math.floor(left) || Math.floor(top) ? 800 : 0 );
 		return $iconbox.animate(
-			{left:left, top:top},
-			{duration: duration}
+			{
+				left: left,
+				top: top
+			},
+			{
+				duration: duration
+			}
 		);
 	})
 	.queue(function(){

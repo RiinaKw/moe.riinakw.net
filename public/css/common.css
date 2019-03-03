@@ -7,6 +7,8 @@ html, body {
   font-size: 2.5vmin;
   height: 100%;
   overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 /* footer: bottom center */
