@@ -1,3 +1,5 @@
+"use strict";
+
 // Convenience object to ease global animation queueing
 $.globalQueue = {
 	queue: function(anim) {
@@ -131,8 +133,7 @@ function Character()
 			);
 		})
 		.queue(function(){
-			$(".animating .text").fadeTo(500, 1);
-			return $(this);
+			return $(".animating .text").fadeTo(500, 1);
 		})
 		.queue(function(){
 			$(".animating").removeClass("animating").addClass("active");
