@@ -208,4 +208,9 @@ $(function(){
 	}).on("click", function(){
 		character.open(this);
 	});
+
+	$(window).on("load resize", function(){
+		var $icon = $(".active > .icon");
+		$(".active .iconbox").width($icon.width()).height($icon.height());
+	});
 });
