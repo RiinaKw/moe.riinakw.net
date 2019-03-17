@@ -13,164 +13,178 @@ $.globalQueue = {
 	}
 };
 
+var page = new Page;
+var character = new Character;
+
 /**** timer setting ****/
-var timer = null;
-var interval = 5000;
 
-function startTimer()
+function Page()
 {
-	timer = setInterval(cbTimer, interval);
-}
+	this.timer = null;
+	this.interval = 5000;
 
-function stopTimer()
-{
-	clearInterval(timer);
-}
+	this.startTimer = function()
+	{
+		this.timer = setInterval(this.cbTimer, this.interval);
 
-function cbTimer()
-{
-	var $active = $(".active");
-	if ( $active.hasClass("en") ) {
-		$(".lang *", $active).animate({top: 0});
-		$active.removeClass("en")
-	} else {
-		$(".lang *", $active).animate({top: "-4vmin"});
-		$active.addClass("en")
-	}
-}
+	} // this.startTimer
+
+	this.stopTimer = function()
+	{
+		clearInterval(this.timer);
+	} // this.stopTimer
+
+	this.cbTimer = function()
+	{
+		var $active = $(".active");
+		if ( $active.hasClass("en") ) {
+			$(".lang *", $active).animate({top: 0});
+			$active.removeClass("en")
+		} else {
+			$(".lang *", $active).animate({top: "-4vmin"});
+			$active.addClass("en")
+		}
+	} // this.stopTimer
+} // function Page()
 
 /**** character operations ****/
 
-function openCharacter(icon)
+function Character()
 {
-	var $icon = $(icon);
-	$icon.parent("li").addClass("animating");
-	var pos = $icon.position();
-	var $content = $icon.siblings(".content");
-	var $iconbox = $("iconbox", $content);
-	if ( $iconbox.length == 0 ) {
-		$iconbox = $('<div class="iconbox" />').prependTo($content);
-	}
-	var iconWidth = $icon.width();
-	var iconHeight = $icon.height();
-	$iconbox.empty()
-		.css({
+	this.current = null;
+
+	this.open = function(icon)
+	{
+		this.current = icon;
+		var $icon = $(icon);
+		$icon.parent("li").addClass("animating");
+		var pos = $icon.position();
+		var $content = $icon.siblings(".content");
+		var $iconbox = $("iconbox", $content);
+		if ( $iconbox.length == 0 ) {
+			$iconbox = $('<div class="iconbox" />').prependTo($content);
+		}
+		var iconWidth = $icon.width();
+		var iconHeight = $icon.height();
+		$iconbox.empty()
+			.css({
+				position: "absolute",
+				left :pos.left,
+				top: pos.top,
+				width: iconWidth,
+				height: iconHeight
+			})
+			.prepend( $icon.clone() );
+		$(".iconbox img").css({
+			opacity: 1
+		}).on("click", function(){
+			character.close();
+		});
+		$content.css({
+			opacity: 0,
+			display: "block"
+		});
+		$(".text", $content).css({
+			opacity: 0
+		});
+		$(".lang *", $content).css({
+			top: 0
+		});
+
+		// icon overlay
+		var $overlay = $("<div />")
+			.addClass("overlay")
+			.appendTo( $(".animating") )
+			.append( $icon.clone() );
+		$(".overlay img").css({
 			position: "absolute",
-			left :pos.left,
+			left: pos.left,
 			top: pos.top,
 			width: iconWidth,
 			height: iconHeight
-		})
-		.prepend( $icon.clone() );
-	$(".iconbox img").css({
-		opacity: 1
-	}).on("click", function(){
-		closeCharacter(this);
-	});
-	$content.css({
-		opacity: 0,
-		display: "block"
-	});
-	$(".text", $content).css({
-		opacity: 0
-	});
-	$(".lang *", $content).css({
-		top: 0
-	});
-
-	// icon overlay
-	var $overlay = $("<div />")
-		.addClass("overlay")
-		.appendTo( $(".animating") )
-		.append( $icon.clone() );
-	$(".overlay img").css({
-		position: "absolute",
-		left: pos.left,
-		top: pos.top,
-		width: iconWidth,
-		height: iconHeight
-	});
-	$overlay.show();
-
-	// open animation
-	$.globalQueue
-	.queue(function(){
-		return $content.fadeTo(300, 1, function(){
-			$(".animating .overlay").remove();
 		});
-	})
-	.queue(function(){
-		var duration = ( Math.floor(pos.left) || Math.floor(pos.top) ? 800 : 0 );
-		return $(".animating .iconbox").animate(
-			{
-				left: 0,
-				top: 0
-			},
-			{
-				duration: duration
-			}
-		);
-	})
-	.queue(function(){
-		$(".animating .text").fadeTo(500, 1);
-		return $(this);
-	})
-	.queue(function(){
-		$(".animating").removeClass("animating").addClass("active");
-		startTimer();
-		return $(".active");
-	});
-} // function openCharacter()
+		$overlay.show();
 
-function closeCharacter(icon)
-{
-	var $icon = $(icon);
-	if ($icon.parents(".active").length == 0) {
-		return;
-	}
-	var $iconbox = $icon.parent();
-	var $parent = $icon.parents(".active");
-	var left = $parent.position().left;
-	var top = $parent.position().top;
+		// open animation
+		$.globalQueue
+		.queue(function(){
+			return $content.fadeTo(300, 1, function(){
+				$(".animating .overlay").remove();
+			});
+		})
+		.queue(function(){
+			var duration = ( Math.floor(pos.left) || Math.floor(pos.top) ? 800 : 0 );
+			return $(".animating .iconbox").animate(
+				{
+					left: 0,
+					top: 0
+				},
+				{
+					duration: duration
+				}
+			);
+		})
+		.queue(function(){
+			$(".animating .text").fadeTo(500, 1);
+			return $(this);
+		})
+		.queue(function(){
+			$(".animating").removeClass("animating").addClass("active");
+			page.startTimer();
+			return $(".active");
+		});
+	} // this.open
 
-	// close animation
-	$.globalQueue
-	.queue(function(){
-		return $(".active .text").fadeTo(400, 0);
-	})
-	.queue(function(){
-		var duration = ( Math.floor(left) || Math.floor(top) ? 800 : 0 );
-		return $iconbox.animate(
-			{
-				left: left,
-				top: top
-			},
-			{
-				duration: duration
-			}
-		);
-	})
-	.queue(function(){
-		return $iconbox.fadeTo(500, 0);
-	})
-	.queue(function(){
-		return $(".active .content").fadeTo(300, 0);
-	})
-	.queue(function(){
-		return $iconbox.hide().remove();
-	})
-	.queue(function(){
-		$(".active .content").hide();
-		$(".active").removeClass("active");
-		stopTimer();
-		return $iconbox;
-	});
-} // closeCharacter()
+	this.close = function()
+	{
+		this.current = null;
+		var $icon = $(".active .iconbox img");
+		if ($icon.parents(".active").length == 0) {
+			return;
+		}
+		var $iconbox = $icon.parent();
+		var $parent = $icon.parents(".active");
+		var left = $parent.position().left;
+		var top = $parent.position().top;
 
+		// close animation
+		$.globalQueue
+		.queue(function(){
+			return $(".active .text").fadeTo(400, 0);
+		})
+		.queue(function(){
+			var duration = ( Math.floor(left) || Math.floor(top) ? 800 : 0 );
+			return $iconbox.animate(
+				{
+					left: left,
+					top: top
+				},
+				{
+					duration: duration
+				}
+			);
+		})
+		.queue(function(){
+			return $iconbox.fadeTo(500, 0);
+		})
+		.queue(function(){
+			return $(".active .content").fadeTo(300, 0);
+		})
+		.queue(function(){
+			return $iconbox.hide().remove();
+		})
+		.queue(function(){
+			$(".active .content").hide();
+			$(".active").removeClass("active");
+			page.stopTimer();
+			return $iconbox;
+		});
+	} // this.close
+} //function Character()
 
 $(function(){
 	$("#js-background").on("click", function(){
-		closeCharacter( $(".active .iconbox img") );
+		character.close();
 	});
 
 	// icon hover effect
@@ -192,6 +206,6 @@ $(function(){
 			});
 		}
 	}).on("click", function(){
-		openCharacter(this);
+		character.open(this);
 	});
 });
