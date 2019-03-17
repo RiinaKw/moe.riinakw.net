@@ -45,6 +45,12 @@ function Page()
 			$active.addClass("en")
 		}
 	} // this.stopTimer
+
+	this.reload = function()
+	{
+		var $icon = $(".active > .icon");
+		$(".active .iconbox").width($icon.width()).height($icon.height());
+	} // this.reload
 } // function Page()
 
 /**** character operations ****/
@@ -180,37 +186,38 @@ function Character()
 			return $iconbox;
 		});
 	} // this.close
+
+	this.hover = function()
+	{
+		$(this).stop();
+		$(this).fadeTo(100, 1, function(){
+			$(".icon-wrapper > ol > li").removeClass("hover");
+			$(this).parent("li").addClass("hover");
+		});
+	} // this.hover
+
+	this.blur = function()
+	{
+		$(this).stop();
+		var defaultOpacity = $(".meta .icon").css("opacity");
+		$(this).parent("li").removeClass("hover");
+		$(this).fadeTo(100, defaultOpacity, function(){
+		});
+	} // this.blur
 } //function Character()
 
 $(function(){
-	$("#js-background").on("click", function(){
-		character.close();
-	});
+	$("#js-background").on("click", character.close);
 
 	// icon hover effect
 	$(".icon").on({
 		// hover
-		"mouseenter": function(){
-			$(this).stop();
-			$(this).fadeTo(100, 1, function(){
-				$(".icon-wrapper > ol > li").removeClass("hover");
-				$(this).parent("li").addClass("hover");
-			});
-		},
+		"mouseenter": character.hover,
 		//blur
-		"mouseleave": function(){
-			$(this).stop();
-			var defaultOpacity = $(".meta .icon").css("opacity");
-			$(this).parent("li").removeClass("hover");
-			$(this).fadeTo(100, defaultOpacity, function(){
-			});
-		}
+		"mouseleave": character.blur,
 	}).on("click", function(){
 		character.open(this);
 	});
 
-	$(window).on("load resize", function(){
-		var $icon = $(".active > .icon");
-		$(".active .iconbox").width($icon.width()).height($icon.height());
-	});
+	$(window).on("load resize", page.reload);
 });
