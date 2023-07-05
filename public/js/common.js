@@ -138,9 +138,9 @@ function Character()
         .queue(function(){
             $(".animating").removeClass("animating").addClass("active");
             page.startTimer();
-			return $(".active");
-		});
-	} // this.open
+            return $(".active");
+        });
+    } // this.open
 
     this.close = function()
     {
