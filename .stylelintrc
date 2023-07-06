@@ -1,0 +1,14 @@
+{
+    "extends": "stylelint-config-standard-scss",
+    "rules": {
+        "indentation": 4,
+        "no-descending-specificity": null,
+        "selector-class-pattern": null,
+        "scss/at-mixin-pattern": null,
+        "scss/no-global-function-names": null,
+        "declaration-colon-space-before": "never",
+        "declaration-colon-space-after": "always-single-line",
+        "declaration-colon-newline-after": "always-multi-line",
+        "number-leading-zero": "never"
+    }
+}
