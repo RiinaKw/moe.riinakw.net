@@ -80,7 +80,7 @@ class Character {
    *
    */
   constructor() {
-    this.current = null;
+    this.$current = null;
   }
 
   /**
@@ -88,9 +88,8 @@ class Character {
    * @param {*} icon
    */
   open(icon) {
-    this.current = icon;
     const $icon = $(icon);
-    $icon.parent('li').addClass('animating');
+    this.$current = $icon.parent('li').addClass('animating');
 
     const pos = $icon.position();
     const $content = $icon.siblings('.content');
@@ -167,15 +166,13 @@ class Character {
    *
    */
   close() {
-    this.current = null;
-    const $icon = $('.active .iconbox img');
+    const $icon = $('.iconbox img', this.$current);
     if ($icon.parents('.active').length == 0) {
       return;
     }
     const $iconbox = $icon.parent();
-    const $parent = $icon.parents('.active');
-    const left = $parent.position().left;
-    const top = $parent.position().top;
+    const left = this.$current.position().left;
+    const top = this.$current.position().top;
 
     // close animation
     $.globalQueue.queue(() => {
@@ -203,6 +200,8 @@ class Character {
       page.stopTimer();
       return $iconbox;
     });
+
+    this.$current = null;
   } // this.close
 } // class Character
 
@@ -210,7 +209,9 @@ const page = new Page;
 const character = new Character;
 
 $(() => {
-  $('#js-background').on('click', character.close);
+  $('#js-background').on('click', () => {
+    character.close();
+  });
 
   // icon hover effect
   $('.icon').on('click', (e) => {
