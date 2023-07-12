@@ -1,18 +1,5 @@
 'use strict';
 
-// Convenience object to ease global animation queueing
-$.globalQueue = {
-  queue: function(anim) {
-    $('html').queue(function(dequeue) {
-      anim().queue(function(innerDequeue) {
-        dequeue();
-        innerDequeue();
-      });
-    });
-    return this;
-  },
-};
-
 /**
  * timer setting
  */
@@ -106,11 +93,13 @@ class Character {
       width: iconWidth,
       height: iconHeight,
     }).prepend( $icon.clone() );
+
     $('.iconbox img').css({
       opacity: 1,
     }).on('click', () => {
       character.close();
     });
+
     $content.css({
       opacity: 0,
       display: 'block',
@@ -123,7 +112,7 @@ class Character {
     });
 
     // icon overlay
-    const $iconClone = $icon.clone().css({
+    const $overlay = $icon.clone().css({
       position: 'absolute',
       left: pos.left,
       top: pos.top,
@@ -132,35 +121,45 @@ class Character {
     });
     $('<div />')
         .addClass('overlay')
-        .appendTo( $('.animating') )
-        .append($iconClone)
+        .appendTo(this.$current)
+        .append($overlay)
         .show();
 
     // open animation
-    $.globalQueue.queue(() => {
-      return $content.fadeTo(300, 1, () => {
-        $('.animating .overlay').remove();
-      });
-    }).queue(() => {
-      const duration =
-        Math.floor(pos.left) || Math.floor(pos.top) ? 800 : 0;
-      return $('.animating .iconbox').animate(
-          {
-            left: 0,
-            top: 0,
-          },
-          {
-            duration: duration,
-          },
-      );
-    }).queue(() => {
-      return $('.animating .text').fadeTo(500, 1);
-    }).queue(() => {
-      $('.animating').removeClass('animating').addClass('active');
-      page.startTimer();
-      return $('.active');
-    });
+    $content.fadeTo(300, 1).promise()
+        .then(() => {
+          $overlay.remove();
+        })
+        .then(() => {
+          return $('.iconbox', this.$current).animate(
+              {
+                left: 0,
+                top: 0,
+              },
+              {
+                duration: this.iconAnimationDuration($icon),
+              },
+          ).promise();
+        })
+        .then(() => {
+          return $('.text', this.$current).fadeTo(500, 1).promise();
+        }).then(() => {
+          this.$current.removeClass('animating').addClass('active');
+          page.startTimer();
+          $('.overlay').remove();
+        });
   } // this.open
+
+  /**
+   *
+   * @param {jquery} $obj
+   * @return {int}
+   */
+  iconAnimationDuration($obj) {
+    const left = $obj.position().left;
+    const top = $obj.position().top;
+    return (Math.floor(left) || Math.floor(top)) ? 800 : 0;
+  }
 
   /**
    *
@@ -171,37 +170,34 @@ class Character {
       return;
     }
     const $iconbox = $icon.parent();
-    const left = this.$current.position().left;
-    const top = this.$current.position().top;
 
     // close animation
-    $.globalQueue.queue(() => {
-      return $('.active .text').fadeTo(400, 0);
-    }).queue(() => {
-      const duration = ( Math.floor(left) || Math.floor(top) ? 800 : 0 );
-      return $iconbox.animate(
-          {
-            left: left,
-            top: top,
-          },
-          {
-            duration: duration,
-          },
-      );
-    }).queue(() => {
-      return $iconbox.fadeTo(500, 0);
-    }).queue(() => {
-      return $('.active .content').fadeTo(300, 0);
-    }).queue(() => {
-      return $iconbox.hide().remove();
-    }).queue(() => {
-      $('.active .content').hide();
-      $('.active').removeClass('active');
-      page.stopTimer();
-      return $iconbox;
-    });
+    $('.active .text').fadeTo(400, 0).promise()
+        .then(() => {
+          const left = this.$current.position().left;
+          const top = this.$current.position().top;
+          return $iconbox.animate(
+              {
+                left: left,
+                top: top,
+              },
+              {
+                duration: this.iconAnimationDuration(this.$current),
+              },
+          ).promise();
+        })
+        .then(() => {
+          $('.content', this.$current).fadeTo(300, 0);
+          return $iconbox.fadeTo(500, 0).promise();
+        })
+        .then(() => {
+          $iconbox.hide().remove();
+          $('.content', this.$current).hide();
+          this.$current.removeClass('active');
+          page.stopTimer();
 
-    this.$current = null;
+          this.$current = null;
+        });
   } // this.close
 } // class Character
 
