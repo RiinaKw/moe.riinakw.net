@@ -111,43 +111,40 @@ class Character {
       top: 0,
     });
 
-    // icon overlay
-    const $overlay = $icon.clone().css({
-      position: 'absolute',
-      left: pos.left,
-      top: pos.top,
-      width: iconWidth,
-      height: iconHeight,
-    });
-    $('<div />')
-        .addClass('overlay')
-        .appendTo(this.$current)
-        .append($overlay)
-        .show();
-
     // open animation
-    $content.fadeTo(300, 1).promise()
-        .then(() => {
-          $overlay.remove();
-        })
-        .then(() => {
-          return $('.iconbox', this.$current).animate(
-              {
-                left: 0,
-                top: 0,
-              },
-              {
-                duration: this.iconAnimationDuration($icon),
-              },
-          ).promise();
-        })
-        .then(() => {
-          return $('.text', this.$current).fadeTo(500, 1).promise();
-        }).then(() => {
-          this.$current.removeClass('animating').addClass('active');
-          page.startTimer();
-          $('.overlay').remove();
-        });
+    (async () => {
+      // icon overlay
+      const $overlay = $icon.clone().css({
+        position: 'absolute',
+        left: pos.left,
+        top: pos.top,
+        width: iconWidth,
+        height: iconHeight,
+      });
+      $('<div />')
+          .addClass('overlay')
+          .appendTo(this.$current)
+          .append($overlay)
+          .show();
+
+      await $content.fadeTo(300, 1).promise();
+      $overlay.remove();
+
+      await $('.iconbox', this.$current).animate(
+          {
+            left: 0,
+            top: 0,
+          },
+          {
+            duration: this.iconAnimationDuration($icon),
+          },
+      ).promise();
+      await $('.text', this.$current).fadeTo(500, 1).promise();
+
+      this.$current.removeClass('animating').addClass('active');
+      page.startTimer();
+      $('.overlay').remove();
+    })();
   } // this.open
 
   /**
@@ -172,32 +169,31 @@ class Character {
     const $iconbox = $icon.parent();
 
     // close animation
-    $('.active .text').fadeTo(400, 0).promise()
-        .then(() => {
-          const left = this.$current.position().left;
-          const top = this.$current.position().top;
-          return $iconbox.animate(
-              {
-                left: left,
-                top: top,
-              },
-              {
-                duration: this.iconAnimationDuration(this.$current),
-              },
-          ).promise();
-        })
-        .then(() => {
-          $('.content', this.$current).fadeTo(300, 0);
-          return $iconbox.fadeTo(500, 0).promise();
-        })
-        .then(() => {
-          $iconbox.hide().remove();
-          $('.content', this.$current).hide();
-          this.$current.removeClass('active');
-          page.stopTimer();
+    (async () => {
+      await $('.active .text').fadeTo(400, 0).promise();
 
-          this.$current = null;
-        });
+      const left = this.$current.position().left;
+      const top = this.$current.position().top;
+      await $iconbox.animate(
+          {
+            left: left,
+            top: top,
+          },
+          {
+            duration: this.iconAnimationDuration(this.$current),
+          },
+      ).promise();
+
+      $('.content', this.$current).fadeTo(300, 0);
+      await $iconbox.fadeTo(500, 0).promise();
+
+      $iconbox.hide().remove();
+      $('.content', this.$current).hide();
+      this.$current.removeClass('active');
+      page.stopTimer();
+
+      this.$current = null;
+    })();
   } // this.close
 } // class Character
 
