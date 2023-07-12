@@ -204,30 +204,6 @@ class Character {
       return $iconbox;
     });
   } // this.close
-
-  /**
-   *
-   */
-  hover() {
-    const $this = $(this);
-    $this.stop();
-    $this.fadeTo(100, 1, () => {
-      $('.icon-wrapper > ol > li').removeClass('hover');
-      $this.parent('li').addClass('hover');
-    });
-  } // this.hover
-
-  /**
-   *
-   */
-  blur() {
-    const $this = $(this);
-    $this.stop();
-    const defaultOpacity = $('.meta .icon').css('opacity');
-    $this.parent('li').removeClass('hover');
-    $this.fadeTo(100, defaultOpacity, () => {
-    });
-  } // this.blur
 } // class Character
 
 const page = new Page;
