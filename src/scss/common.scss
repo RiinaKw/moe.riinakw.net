@@ -73,6 +73,11 @@ li {
   height: 100%;
   opacity: $icon-initial-transparent;
   cursor: pointer;
+  transition: opacity .15s;
+
+  &:hover {
+    opacity: 1;
+  }
 }
 
 .overlay {

@@ -237,10 +237,7 @@ $(() => {
   $('#js-background').on('click', character.close);
 
   // icon hover effect
-  $('.icon').on({
-    'mouseenter': character.hover,
-    'mouseleave': character.blur,
-  }).on('click', (e) => {
+  $('.icon').on('click', (e) => {
     character.open(e.target);
   });
 
