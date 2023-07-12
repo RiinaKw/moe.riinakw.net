@@ -36,19 +36,8 @@ footer {
   margin: 0 auto;
   padding: 0;
   width: 85vmin;
-  height: 10vmin;
+  height: 2.75rem;
   font-size: $footer-text-size;
-}
-
-@media screen and (orientation: landscape) {
-  /* footer: bottom right */
-  footer {
-    bottom: 0;
-    left: auto;
-    right: 0;
-    width: 40vmin;
-    height: 20vmin;
-  }
 }
 
 /* icon */
