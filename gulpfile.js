@@ -24,12 +24,13 @@ const scssCompile = require('./gulpfile/scss-compile');
 const jsCopy = require('./gulpfile/js-copy');
 const vendorCopy = require('./gulpfile/vendor-copy');
 const imageCopy = require('./gulpfile/image-copy');
+const faviconCopy = require('./gulpfile/favicon-copy');
 
 exports.html = htmlCopy;
 exports.scss = scssCompile;
 exports.ts = jsCopy;
 exports.vendor = vendorCopy;
-exports.image = imageCopy;
+exports.favicon = faviconCopy;
 
 // ファイル更新を監視してブラウザをリロード
 exports.serve = () => {
@@ -98,4 +99,5 @@ exports.default = gulp.parallel(
     jsCopy,
     vendorCopy,
     imageCopy,
+    faviconCopy,
 );

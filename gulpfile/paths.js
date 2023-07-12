@@ -5,7 +5,7 @@ exports.html = {
   dist: 'dist',
 };
 exports.scss = {
-  src: 'src/css/**/*.{scss,css}',
+  src: 'src/scss/**/*.{scss,css}',
   dist: 'dist/css',
 };
 exports.ts = {
@@ -19,4 +19,8 @@ exports.vendor = {
 exports.image = {
   src: 'src/images/**/*',
   dist: 'dist/images',
+};
+exports.favicon = {
+  src: 'src/favicon.ico',
+  dist: 'dist',
 };
