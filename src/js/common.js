@@ -4,6 +4,9 @@
  * timer setting
  */
 class Page {
+  timer;
+  interval;
+
   /**
    * constructor
    */
@@ -13,21 +16,21 @@ class Page {
   }
 
   /**
-   *
+   * タイマーを開始
    */
   startTimer() {
     this.timer = setInterval(this.cbTimer, this.interval);
   } // this.startTimer
 
   /**
-   *
+   * タイマーを停止
    */
   stopTimer() {
     clearInterval(this.timer);
   } // this.stopTimer
 
   /**
-   *
+   * タイマーのハンドラ
    */
   cbTimer() {
     const $active = $('.active');
@@ -41,7 +44,7 @@ class Page {
   } // this.stopTimer
 
   /**
-   *
+   * ウィンドウリロードのハンドラ
    */
   reload() {
     const $icon = $('.active > .icon');
@@ -63,16 +66,19 @@ function jqOrNull($obj) {
  * character operations
  */
 class Character {
+  $current;
+
   /**
-   *
+   * constructor
    */
   constructor() {
     this.$current = null;
   }
 
   /**
+   * キャラクターを開く
    *
-   * @param {*} icon
+   * @param {HTMLElement} icon
    */
   open(icon) {
     const $icon = $(icon);
@@ -148,6 +154,7 @@ class Character {
   } // this.open
 
   /**
+   * オブジェクトの表示位置からアニメーションするミリ秒を決定
    *
    * @param {jquery} $obj
    * @return {int}
@@ -159,7 +166,7 @@ class Character {
   }
 
   /**
-   *
+   * キャラクターを閉じる
    */
   close() {
     const $icon = $('.iconbox img', this.$current);
