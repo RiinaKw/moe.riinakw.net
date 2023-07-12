@@ -63,6 +63,16 @@ class Page {
 } // class Page
 
 /**
+ * jQuery の対象要素が存在しなかったら null に変換
+ *
+ * @param {jquery} $obj
+ * @return {jquery|null}
+ */
+function jqOrNull($obj) {
+  return $obj.length !== 0 ? $obj : null;
+}
+
+/**
  * character operations
  */
 class Character {
@@ -81,14 +91,15 @@ class Character {
     this.current = icon;
     const $icon = $(icon);
     $icon.parent('li').addClass('animating');
+
     const pos = $icon.position();
     const $content = $icon.siblings('.content');
-    let $iconbox = $('iconbox', $content);
-    if ( $iconbox.length == 0 ) {
-      $iconbox = $('<div class="iconbox" />').prependTo($content);
-    }
+    const $iconbox =
+      jqOrNull($('iconbox', $content)) ??
+      $('<div />').addClass('iconbox').prependTo($content);
     const iconWidth = $icon.width();
     const iconHeight = $icon.height();
+
     $iconbox.empty().css({
       position: 'absolute',
       left: pos.left,
