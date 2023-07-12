@@ -98,7 +98,7 @@ class Character {
     }).prepend( $icon.clone() );
     $('.iconbox img').css({
       opacity: 1,
-    }).on('click', function() {
+    }).on('click', () => {
       character.close();
     });
     $content.css({
@@ -127,11 +127,11 @@ class Character {
     $overlay.show();
 
     // open animation
-    $.globalQueue.queue(function() {
-      return $content.fadeTo(300, 1, function() {
+    $.globalQueue.queue(() => {
+      return $content.fadeTo(300, 1, () => {
         $('.animating .overlay').remove();
       });
-    }).queue(function() {
+    }).queue(() => {
       const duration =
         Math.floor(pos.left) || Math.floor(pos.top) ? 800 : 0;
       return $('.animating .iconbox').animate(
@@ -143,9 +143,9 @@ class Character {
             duration: duration,
           },
       );
-    }).queue(function() {
+    }).queue(() => {
       return $('.animating .text').fadeTo(500, 1);
-    }).queue(function() {
+    }).queue(() => {
       $('.animating').removeClass('animating').addClass('active');
       page.startTimer();
       return $('.active');
@@ -167,9 +167,9 @@ class Character {
     const top = $parent.position().top;
 
     // close animation
-    $.globalQueue.queue(function() {
+    $.globalQueue.queue(() => {
       return $('.active .text').fadeTo(400, 0);
-    }).queue(function() {
+    }).queue(() => {
       const duration = ( Math.floor(left) || Math.floor(top) ? 800 : 0 );
       return $iconbox.animate(
           {
@@ -180,13 +180,13 @@ class Character {
             duration: duration,
           },
       );
-    }).queue(function() {
+    }).queue(() => {
       return $iconbox.fadeTo(500, 0);
-    }).queue(function() {
+    }).queue(() => {
       return $('.active .content').fadeTo(300, 0);
-    }).queue(function() {
+    }).queue(() => {
       return $iconbox.hide().remove();
-    }).queue(function() {
+    }).queue(() => {
       $('.active .content').hide();
       $('.active').removeClass('active');
       page.stopTimer();
@@ -200,7 +200,7 @@ class Character {
   hover() {
     const $this = $(this);
     $this.stop();
-    $this.fadeTo(100, 1, function() {
+    $this.fadeTo(100, 1, () => {
       $('.icon-wrapper > ol > li').removeClass('hover');
       $this.parent('li').addClass('hover');
     });
@@ -214,7 +214,7 @@ class Character {
     $this.stop();
     const defaultOpacity = $('.meta .icon').css('opacity');
     $this.parent('li').removeClass('hover');
-    $this.fadeTo(100, defaultOpacity, function() {
+    $this.fadeTo(100, defaultOpacity, () => {
     });
   } // this.blur
 } // class Character
@@ -222,7 +222,7 @@ class Character {
 const page = new Page;
 const character = new Character;
 
-$(function() {
+$(() => {
   $('#js-background').on('click', character.close);
 
   // icon hover effect
