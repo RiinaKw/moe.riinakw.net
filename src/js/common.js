@@ -124,18 +124,18 @@ class Character {
     });
 
     // icon overlay
-    const $overlay = $('<div />')
-        .addClass('overlay')
-        .appendTo( $('.animating') )
-        .append( $icon.clone() );
-    $('.overlay img').css({
+    const $iconClone = $icon.clone().css({
       position: 'absolute',
       left: pos.left,
       top: pos.top,
       width: iconWidth,
       height: iconHeight,
     });
-    $overlay.show();
+    $('<div />')
+        .addClass('overlay')
+        .appendTo( $('.animating') )
+        .append($iconClone)
+        .show();
 
     // open animation
     $.globalQueue.queue(() => {
